@@ -1,0 +1,262 @@
+/*
+  Lofton Harmon
+  09-03-2017
+  Switch Communications - Frontend developer challenge
+  Tested in Chrome and Firefox
+  Resolutions: < 1800px
+
+  DEVELOPMENT AND TESTING
+  Chrome Css injector: https://chrome.google.com/webstore/detail/css-inject/fmiohbdblcemacakpnoinjmcelddpjbg
+  Firefox Css injector (not as good): https://addons.mozilla.org/en-US/firefox/addon/custom-style-script/
+  I used the npm package https://www.npmjs.com/package/http-server for as local file server
+
+  Authors Notes:
+    So, I can't design my way out of a paper bag, so go easy on the design aspect of this project...
+*/
+
+html,
+body{
+  overflow-x: hidden;
+}
+
+/**************************************************
+  INTRO ANIMATION
+  Page should start out blank, then fade in trees,
+  then as trees fade out fade in content.
+***************************************************/
+@keyframes bodyFadeIn {
+  0% {opacity: 0}
+  50% {opacity: 0}
+  100% {opacity: 1}
+}
+
+body{
+  display: flex;
+  -webkit-flex-flow: row wrap;
+  flex-flow: row wrap;
+}
+
+body > *{
+  animation: bodyFadeIn 3s linear 0s forwards;
+}
+
+@keyframes fadeTreesInOut {
+    0% {opacity: 0}
+    50% {opacity: 1}
+    99% {opacity: 0; width: 100%}
+    100% {opacity: 0; width: 0px;}
+}
+
+body:after {
+  content: '';
+  display: block;
+  position: fixed;
+  top: 0px;
+  bottom: 0px;
+  width: 100%;
+  background: url('http://127.0.0.1:8080/landscape.svg') no-repeat 100% bottom;
+  background-size: 100%;
+  z-index: 9998;
+  opacity: 1;
+  animation: fadeTreesInOut 3s ease-in-out 0s forwards;
+}
+
+
+/**************************************************
+  NAVIGATION
+  Added new Animation to the hoverstate, Should
+  expand a red line left to right then drop down.
+**************************************************/
+@keyframes displayMenu {
+  0% {max-height: 0px; max-width: 0px; padding: 0px;}
+  50% { max-height: 0px; max-width: 200px; padding: 0px;}
+  100% { max-height: 400px; max-width: 200px; padding: inherit;}
+
+}
+li:hover .menu{
+  border-top: 5px solid #d71921;
+  animation: displayMenu .75s ease-in-out 0s forwards;
+  overflow: hidden;
+}
+
+/**************************************************
+  SECTIONS
+  Redordered sections useing Flex's order atribute.
+  1. Section Carousel
+  2. Section Copy
+  3. Section Header
+  4. Section Stories
+**************************************************/
+
+/* Blocked out page when changed to flex, so hidden. */
+.bodyback{
+  display: none;
+}
+
+/**************************************************
+  SECTION CAROUSEL
+  Reduced to take 1 of 2 flex (50%)
+**************************************************/
+.section.section_carousel{
+  order: 1;
+  flex: 1;
+}
+
+/**************************************************
+  SECTION COPY
+  Reordered and 1 of 2 flex (50%)
+  Also above fold so bonus SEO points.
+**************************************************/
+.section.section_copy{
+  order:2;
+  flex: 1;
+  background: url('http://127.0.0.1:8080/repeating-background.svg');
+  background-size: 100%;
+  background-attachment: fixed;
+  padding: 1% 0px 0px; /* Hacky responsive workaround for whitespace above paragraph. */
+}
+
+.section.section_copy .story-text :last-child{
+  margin: 0px;
+  float: right;
+}
+
+.section.section_copy p{
+  width: 100%;
+}
+
+/**************************************************
+  SECTION HEADER
+  Reordered, Added a more stylized background and moved
+  the text to fit more appropriately.
+**************************************************/
+.section.section_header {
+  order: 3;
+  flex-basis: auto;
+  width: 100%;
+}
+
+header.banner{
+  background-image: url('http://127.0.0.1:8080/landscape-mirrored.svg');
+  height: 200px;
+}
+
+header.banner .banner-text{
+  top: 45%;
+}
+
+header.banner h1{
+  color: #f6f6f6 !important;
+}
+
+header.banner img{
+  display: none;
+}
+
+/**************************************************
+  SECTION STORIES
+  Added headbar hover state
+  changed responsive stacking
+  Added (even) full width (wanna be paralax) background
+**************************************************/
+.section.section_stories{
+  order: 4;
+}
+
+.section.section_stories .story{
+  position: relative;
+  padding: 20px;
+}
+
+.section.section_stories .story:nth-child(even) p,
+.section.section_stories .story:nth-child(even) a.headbar,
+.section.section_stories .story:nth-child(even) h3 {
+  color: #fff;
+  background: none;
+}
+
+.section.section_stories .story a.headbar{
+  webkit-box-shadow: 0px 0px 14px 0px rgba(215,25,33,0);
+  -moz-box-shadow: 0px 0px 14px 0px rgba(215,25,33,0);
+  box-shadow: 0px 0px 14px 0px rgba(215,25,33,0);
+}
+
+.section.section_stories .story a.headbar:hover{
+  -webkit-box-shadow: 0px 0px 14px 0px rgba(215,25,33,1);
+  -moz-box-shadow: 0px 0px 14px 0px rgba(215,25,33,1);
+  box-shadow: 0px 0px 14px 0px rgba(215,25,33,1);
+}
+
+.section.section_stories .story:nth-child(even){
+  background: rgba(0,0,0,0.5);
+}
+
+.section.section_stories .story:nth-child(even):after{
+  display: block;
+  content: "";
+  top: -20px;
+  bottom: -20px;
+  left: -50%;
+  width: 200%;
+  position: absolute;
+  background-color: #333;
+  background-image: url('http://127.0.0.1:8080/repeating-background.svg');
+  background-size: 100%;
+  background-attachment: fixed;
+  z-index: -1;
+}
+
+
+/**************************************************
+  RESPONSIVE BREAKS
+  If I were using Less or Sass I'd have
+  added the breakpoints inside the nested
+  structures.
+**************************************************/
+@media (min-width: 1505px) and (max-width: 1650px) {
+  .section.section_copy p{
+    font-size: 16px;
+    display: inline;
+  }
+}
+
+@media (max-width: 1505px) {
+  .section.section_carousel{
+    flex-basis: auto;
+    width: 100%;
+  }
+
+  .section.section_copy{
+    flex-basis: auto;
+    width: 100%;
+    padding: 50px 0px;
+  }
+
+  .section.section_copy .story-text :last-child{
+    margin: 0px;
+    float: none;
+  }
+}
+
+@media (max-width: 950px) {
+  .section.section_stories .story{
+    margin: 0px 20px;
+  }
+}
+@media (max-width: 700px) {
+  .section.section_stories .headbar{
+    display: block;
+  }
+
+  .section.section_stories img {
+    display: block;
+    margin: 0px auto;
+    padding-bottom: 10px;
+  }
+
+  .section.section_stories h3 {
+    display: block;
+    width: 100%;
+    padding: 0px 0px 30px;
+  }
+}
